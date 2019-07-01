@@ -1,9 +1,9 @@
 {
     "name": "Taxonomy",
     "alias": "taxonomy",
-    "description": "",
+    "description": "Defines vocabularies and items",
     "keywords": [],
-    "active": 1,
+    "active": 0,
     "order": 10,
     "providers": [
         "Pingu\\Taxonomy\\Providers\\TaxonomyServiceProvider"
