@@ -3,12 +3,12 @@
     "alias": "taxonomy",
     "description": "Defines vocabularies and items",
     "keywords": [],
-    "active": 0,
+    "active": 1,
     "order": 10,
     "providers": [
         "Pingu\\Taxonomy\\Providers\\TaxonomyServiceProvider"
     ],
-    "aliases": {},
+    "aliases": [],
     "files": [
         "functions.php"
     ],
