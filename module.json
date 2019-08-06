@@ -4,6 +4,7 @@
     "description": "Defines vocabularies and items",
     "keywords": [],
     "order": 10,
+    "core": 1,
     "providers": [
         "Pingu\\Taxonomy\\Providers\\TaxonomyServiceProvider"
     ],
