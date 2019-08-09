@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class TaxonomyInstall extends Migration
+class M2019_08_09_180346486495_Install extends Migration
 {
     /**
      * Run the migrations.
