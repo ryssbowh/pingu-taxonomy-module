@@ -3,21 +3,19 @@
 namespace Pingu\Taxonomy\Entities;
 
 use Illuminate\Support\Str;
-use Pingu\Core\Contracts\Models\HasAjaxRoutesContract;
 use Pingu\Core\Contracts\Models\HasChildrenContract;
 use Pingu\Core\Entities\BaseModel;
-use Pingu\Core\Traits\Models\HasAjaxRoutes;
+use Pingu\Core\Traits\Models\HasBasicCrudUris;
 use Pingu\Core\Traits\Models\HasChildren;
-use Pingu\Core\Traits\Models\HasRouteSlug;
 use Pingu\Forms\Contracts\Models\FormableContract;
 use Pingu\Forms\Support\Fields\ModelSelect;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Traits\Models\Formable;
 use Pingu\Taxonomy\Entities\Taxonomy;
 
-class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableContract, HasAjaxRoutesContract
+class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableContract
 {
-    use HasChildren, Formable, HasAjaxRoutes, HasRouteSlug;
+    use HasChildren, Formable, HasBasicCrudUris;
 
     protected $visible = ['id', 'weight', 'name', 'taxonomy', 'description'];
 

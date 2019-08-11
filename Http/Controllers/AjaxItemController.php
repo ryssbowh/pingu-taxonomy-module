@@ -26,7 +26,7 @@ class AjaxItemController extends AjaxModelController
     protected function getStoreUri()
 	{
 		$taxonomy = $this->request->route()->parameters()['taxonomy'];
-		return TaxonomyItem::transformAjaxUri('store', [$taxonomy], true);
+		return TaxonomyItem::transformUri('store', [$taxonomy], config('core.ajaxPrefix'));
 	}
 
 	/**

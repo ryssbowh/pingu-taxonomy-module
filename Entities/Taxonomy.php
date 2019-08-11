@@ -3,13 +3,10 @@
 namespace Pingu\Taxonomy\Entities;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Pingu\Core\Contracts\Models\HasAdminRoutesContract;
 use Pingu\Core\Contracts\Models\HasContextualLinksContract;
 use Pingu\Core\Contracts\Models\HasItemsContract;
 use Pingu\Core\Entities\BaseModel;
-use Pingu\Core\Traits\Models\HasAdminRoutes;
-use Pingu\Core\Traits\Models\HasAjaxRoutes;
-use Pingu\Core\Traits\Models\HasRouteSlug;
+use Pingu\Core\Traits\Models\HasBasicCrudUris;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Support\Fields\Textarea;
 use Pingu\Forms\Traits\Models\Formable;
@@ -18,9 +15,9 @@ use Pingu\Jsgrid\Fields\Text;
 use Pingu\Jsgrid\Traits\Models\JsGridable;
 use Pingu\Taxonomy\Entities\TaxonomyItem;
 
-class Taxonomy extends BaseModel implements JsGridableContract, HasAdminRoutesContract, HasItemsContract, HasContextualLinksContract
+class Taxonomy extends BaseModel implements JsGridableContract, HasItemsContract, HasContextualLinksContract
 {
-    use Formable, JsGridable, HasAdminRoutes, HasAjaxRoutes, HasRouteSlug;
+    use Formable, JsGridable, HasBasicCrudUris;
 
     protected $visible = ['id', 'name', 'machineName', 'description'];
 
@@ -176,7 +173,7 @@ class Taxonomy extends BaseModel implements JsGridableContract, HasAdminRoutesCo
      *
      * @return string
      */
-    public static function adminEditItemsUri()
+    public static function editItemsUri()
     {
         return static::routeSlug().'/{'.static::routeSlug().'}/items';
     }

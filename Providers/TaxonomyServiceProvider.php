@@ -32,7 +32,6 @@ class TaxonomyServiceProvider extends ModuleServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'taxonomy');
         $this->registerFactories();
         //$this->registerAssets();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
 
     /**

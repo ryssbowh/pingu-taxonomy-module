@@ -14,22 +14,22 @@ use Pingu\Taxonomy\Entities\TaxonomyItem;
 |
 */
 
-Route::get(Taxonomy::getAjaxUri('index'), ['uses' => 'TaxonomyJsGridController@jsGridIndex'])
+Route::get(Taxonomy::getUri('index'), ['uses' => 'TaxonomyJsGridController@jsGridIndex'])
 	->middleware('can:view taxonomy vocabularies');
-Route::delete(Taxonomy::getAjaxUri('delete'), ['uses' => 'AjaxTaxonomyController@delete'])
+Route::delete(Taxonomy::getUri('delete'), ['uses' => 'AjaxTaxonomyController@delete'])
 	->middleware('can:delete taxonomy vocabularies');
-Route::put(Taxonomy::getAjaxUri('update'), ['uses' => 'AjaxTaxonomyController@update'])
+Route::put(Taxonomy::getUri('update'), ['uses' => 'AjaxTaxonomyController@update'])
 	->middleware('can:edit taxonomy vocabularies');
 
-Route::get(TaxonomyItem::getAjaxUri('create'), ['uses' => 'AjaxItemController@create'])
+Route::get(TaxonomyItem::getUri('create'), ['uses' => 'AjaxItemController@create'])
 	->middleware('can:add taxonomy terms');
-Route::post(TaxonomyItem::getAjaxUri('store'), ['uses' => 'AjaxItemController@store'])
+Route::post(TaxonomyItem::getUri('store'), ['uses' => 'AjaxItemController@store'])
 	->middleware('can:add taxonomy terms');
-Route::delete(TaxonomyItem::getAjaxUri('delete'), ['uses' => 'AjaxItemController@delete'])
+Route::delete(TaxonomyItem::getUri('delete'), ['uses' => 'AjaxItemController@delete'])
 	->middleware('can:delete taxonomy terms');
-Route::get(TaxonomyItem::getAjaxUri('edit'), ['uses' => 'AjaxItemController@edit'])
+Route::get(TaxonomyItem::getUri('edit'), ['uses' => 'AjaxItemController@edit'])
 	->middleware('can:edit taxonomy terms');
-Route::put(TaxonomyItem::getAjaxUri('update'), ['uses' => 'AjaxItemController@update'])
+Route::put(TaxonomyItem::getUri('update'), ['uses' => 'AjaxItemController@update'])
 	->middleware('can:edit taxonomy terms');
-Route::patch(TaxonomyItem::getAjaxUri('patch'), ['uses' => 'AjaxItemController@patch'])
+Route::patch(TaxonomyItem::getUri('patch'), ['uses' => 'AjaxItemController@patch'])
 	->middleware('can:edit taxonomy terms');
