@@ -4,6 +4,7 @@ namespace Pingu\Taxonomy\Entities;
 
 use Illuminate\Support\Str;
 use Pingu\Core\Contracts\Models\HasChildrenContract;
+use Pingu\Core\Contracts\Models\HasCrudUrisContract;
 use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Traits\Models\HasBasicCrudUris;
 use Pingu\Core\Traits\Models\HasChildren;
@@ -13,7 +14,7 @@ use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Traits\Models\Formable;
 use Pingu\Taxonomy\Entities\Taxonomy;
 
-class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableContract
+class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableContract, HasCrudUrisContract
 {
     use HasChildren, Formable, HasBasicCrudUris;
 
@@ -192,15 +193,15 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
     /**
      * @inheritDoc
      */
-    public static function ajaxCreateUri()
+    public static function createUri()
     {
-        return static::ajaxStoreUri().'/create';
+        return static::storeUri().'/create';
     }
 
     /**
      * @inheritDoc
      */
-    public static function ajaxStoreUri()
+    public static function storeUri()
     {
         return Taxonomy::routeSlug().'/{'.Taxonomy::routeSlug().'}/'.static::routeSlugs();
     }
@@ -208,7 +209,7 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
     /**
      * @inheritDoc
      */
-    public static function ajaxDeleteUri()
+    public static function deleteUri()
     {
         return Taxonomy::routeSlugs().'/'.static::routeSlugs().'/{'.static::routeSlug().'}';
     }
@@ -216,23 +217,23 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
     /**
      * @inheritDoc
      */
-    public static function ajaxEditUri()
+    public static function editUri()
     {
-        return static::ajaxDeleteUri().'/edit';
+        return static::deleteUri().'/edit';
     }
 
     /**
      * @inheritDoc
      */
-    public static function ajaxUpdateUri()
+    public static function updateUri()
     {
-        return static::ajaxDeleteUri();
+        return static::deleteUri();
     }
 
     /**
      * @inheritDoc
      */
-    public static function ajaxPatchUri()
+    public static function patchUri()
     {
         return Taxonomy::routeSlugs().'/'.static::routeSlugs();
     }

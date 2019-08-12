@@ -48,7 +48,7 @@ class TaxonomyJsGridController extends JsGridModelController
         $options['jsgrid'] = $this->buildJsGridView($request);
         $options['title'] = str_plural(Taxonomy::friendlyName());
         $options['canSeeAddLink'] = \Auth::user()->can('add menus');
-        $options['addLink'] = Taxonomy::getAdminUri('create', true);
+        $options['addLink'] = Taxonomy::getUri('create', config('core.adminPrefix'));
         
         return view('pages.listModel-jsGrid', $options);
     }

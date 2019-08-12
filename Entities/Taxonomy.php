@@ -159,11 +159,11 @@ class Taxonomy extends BaseModel implements JsGridableContract, HasItemsContract
         return [
             'edit' => [
                 'title' => 'Edit',
-                'url' => $this::transformAdminUri('edit', $this, true)
+                'url' => $this::transformUri('edit', $this, config('core.adminPrefix'))
             ],
             'items' => [
                 'title' => 'Items',
-                'url' => $this::transformAdminUri('editItems', $this, true)
+                'url' => $this::transformUri('editItems', $this, config('core.adminPrefix'))
             ]
         ];
     }
