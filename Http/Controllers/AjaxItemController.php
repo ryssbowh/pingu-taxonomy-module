@@ -20,55 +20,31 @@ class AjaxItemController extends AjaxModelController
     }
 
     /**
-     * Adds the taxonomy id (coming from the request path) to the store uri
-     * @return string
-     */
+	 * @inheritDoc
+	 */
     protected function getStoreUri()
 	{
 		$taxonomy = $this->request->route()->parameters()['taxonomy'];
-		return TaxonomyItem::transformUri('store', [$taxonomy], config('core.ajaxPrefix'));
+		return TaxonomyItem::makeUri('store', [$taxonomy], ajaxPrefix());
 	}
 
 	/**
-	 * Add the taxonomy as a hidden field in the create form
-	 * @param  Form    $form
+	 * @inheritDoc
 	 */
     public function afterStoreFormCreated(Form $form)
 	{
 		$taxonomy = $this->request->route()->parameter('taxonomy');
-		$form->setFieldValue('taxonomy', $taxonomy);
+		$form->addHiddenField('taxonomy', $taxonomy->id);
 	}
 
 	/**
-	 * Bulk update for taxonomy items
-	 * @return array
+	 * @inheritDoc
 	 */
-	public function patch()
-	{
-		$post = $this->request->post();
-		if(!isset($post['models'])){
-			throw new HttpException(422, "'models' must be set for a patch request");
-		}
-		$model = $this->getModel();
-		$model = new $model;
-		$models = collect();
-		$this->saveItems($post['models']);
-		return ['message' => 'Items have been updated'];
+	protected function performStore(BaseModel $model, array $validated){
+		$taxonomy = $this->request->route()->parameters()['taxonomy'];
+		$validated['taxonomy'] = $taxonomy->id;
+		$model->saveWithRelations($validated);
+		return $model;
 	}
 
-	protected function saveItems($itemsData, $parent = null)
-	{
-		foreach($itemsData as $weight => $data){
-			$item = TaxonomyItem::findOrFail($data['id']);
-			$item->weight = $data['weight'];
-			$item->parent()->dissociate();
-			if($parent){
-				$item->parent()->associate($parent);
-			}
-			$item->save();
-			if(isset($data['children'])){
-				$this->saveItems($data['children'], $data['id']);
-			}
-		}
-	}
 }

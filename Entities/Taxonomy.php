@@ -7,6 +7,7 @@ use Pingu\Core\Contracts\Models\HasContextualLinksContract;
 use Pingu\Core\Contracts\Models\HasItemsContract;
 use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Traits\Models\HasBasicCrudUris;
+use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Support\Fields\Textarea;
 use Pingu\Forms\Traits\Models\Formable;
@@ -17,7 +18,7 @@ use Pingu\Taxonomy\Entities\TaxonomyItem;
 
 class Taxonomy extends BaseModel implements JsGridableContract, HasItemsContract, HasContextualLinksContract
 {
-    use Formable, JsGridable, HasBasicCrudUris;
+    use Formable, JsGridable, HasBasicCrudUris, HasMachineName;
 
     protected $visible = ['id', 'name', 'machineName', 'description'];
 
@@ -121,17 +122,6 @@ class Taxonomy extends BaseModel implements JsGridableContract, HasItemsContract
     }
 
     /**
-     * Finds a taxonomy by its name
-     * 
-     * @param  string $machineName
-     * @return Taxonomy
-     */
-    public static function findByName(string $machineName)
-    {
-        return static::where(['machineName' => $machineName])->first();
-    }
-
-    /**
      * Get the direct children of this taxonomy
      * 
      * @return Collection
@@ -159,11 +149,11 @@ class Taxonomy extends BaseModel implements JsGridableContract, HasItemsContract
         return [
             'edit' => [
                 'title' => 'Edit',
-                'url' => $this::transformUri('edit', $this, config('core.adminPrefix'))
+                'url' => $this::makeUri('edit', $this, adminPrefix())
             ],
             'items' => [
                 'title' => 'Items',
-                'url' => $this::transformUri('editItems', $this, config('core.adminPrefix'))
+                'url' => $this::makeUri('editItems', $this, adminPrefix())
             ]
         ];
     }

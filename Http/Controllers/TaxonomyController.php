@@ -18,10 +18,10 @@ class TaxonomyController extends AdminModelController
         return view('taxonomy::edit-items')->with([
             'taxonomy' => $taxonomy, 
             'items' => $taxonomy->getRootItems(),
-            'addItemUri' => TaxonomyItem::transformUri('create', $taxonomy, config('core.ajaxPrefix')),
-            'deleteItemUri' => TaxonomyItem::getUri('delete', config('core.ajaxPrefix')),
-            'editItemUri' => TaxonomyItem::getUri('edit', config('core.ajaxPrefix')),
-            'patchItemsUri' => TaxonomyItem::getUri('patch', config('core.ajaxPrefix'))
+            'addItemUri' => TaxonomyItem::makeUri('create', $taxonomy, adminPrefix()),
+            'deleteItemUri' => TaxonomyItem::getUri('delete', adminPrefix()),
+            'editItemUri' => TaxonomyItem::getUri('edit', adminPrefix()),
+            'patchItemsUri' => TaxonomyItem::getUri('patch', adminPrefix())
         ]);
     }
 

@@ -8,15 +8,17 @@ use Pingu\Core\Contracts\Models\HasCrudUrisContract;
 use Pingu\Core\Entities\BaseModel;
 use Pingu\Core\Traits\Models\HasBasicCrudUris;
 use Pingu\Core\Traits\Models\HasChildren;
+use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Forms\Contracts\Models\FormableContract;
 use Pingu\Forms\Support\Fields\ModelSelect;
+use Pingu\Forms\Support\Fields\NumberInput;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Traits\Models\Formable;
 use Pingu\Taxonomy\Entities\Taxonomy;
 
 class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableContract, HasCrudUrisContract
 {
-    use HasChildren, Formable, HasBasicCrudUris;
+    use HasChildren, Formable, HasBasicCrudUris, HasMachineName;
 
     protected $visible = ['id', 'weight', 'name', 'taxonomy', 'description'];
 
@@ -45,7 +47,7 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
      */
     public function formAddFields()
     {
-        return ['name', 'description', 'taxonomy'];
+        return ['name', 'description'];
     }
 
     /**
@@ -53,7 +55,7 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
      */
     public function formEditFields()
     {
-        return ['name', 'description', 'taxonomy'];
+        return ['name', 'description'];
     }
 
     /**
@@ -68,13 +70,16 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
             'description' => [
                 'field' => TextInput::class
             ],
+            'weight' => [
+                'field' => NumberInput::class
+            ],
             'taxonomy' => [
                 'field' => ModelSelect::class,
                 'options' => [
                     'model' => Taxonomy::class,
                     'textField' => 'name',
                     'default' => $this->taxonomy,
-                    'allowNoValue' => false
+                    'allowNoValue' => false,
                 ]
             ],
             'parent' => [
@@ -97,7 +102,7 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
             'name' => 'required',
             'taxonomy' => 'required|exists:taxonomies,id',
             'parent' => 'sometimes|exists:taxonomy_items,id',
-            'weight' => 'nullable',
+            'weight' => 'nullable|integer',
             'description' => 'string'
         ];
     }
@@ -113,34 +118,7 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
             'parent.exists' => 'Parent must be a taxonomy item',
             'taxonomy.exists' => 'Taxonomy must be a taxonomy',
         ];
-    }
-
-    public static function findByName(string $name)
-    {
-    	return static::where(['machineName' => $name])->first();
-    }
-
-    /**
-     * Suffixes $name with a number to make it unique
-     * 
-     * @param  string $name
-     * @return string
-     */
-    public function getUniqueMachineName(string $name){
-        if(!$this::findByName($name)){
-        	return $name;
-        }
-
-        if(substr($name, -2, 1) == '_'){
-            $number = (int)substr($name, -1);
-            $name = trim($name, $number).($number + 1);
-        }
-        else{
-            $name .= "_1";
-        }
-
-        return $this->getUniqueMachineName($name);
-    }   
+    }  
 
     /**
      * Generate a machine name for this item
@@ -211,7 +189,7 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
      */
     public static function deleteUri()
     {
-        return Taxonomy::routeSlugs().'/'.static::routeSlugs().'/{'.static::routeSlug().'}';
+        return static::updateUri().'/delete';
     }
 
     /**
@@ -219,7 +197,7 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
      */
     public static function editUri()
     {
-        return static::deleteUri().'/edit';
+        return static::updateUri().'/edit';
     }
 
     /**
@@ -227,7 +205,7 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
      */
     public static function updateUri()
     {
-        return static::deleteUri();
+        return static::routeSlugs().'/{'.static::routeSlug().'}';
     }
 
     /**
@@ -235,6 +213,6 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
      */
     public static function patchUri()
     {
-        return Taxonomy::routeSlugs().'/'.static::routeSlugs();
+        return static::routeSlugs();
     }
 }

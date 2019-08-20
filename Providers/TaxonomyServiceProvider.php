@@ -4,6 +4,7 @@ namespace Pingu\Taxonomy\Providers;
 
 use Illuminate\Database\Eloquent\Factory;
 use Pingu\Core\Support\ModuleServiceProvider;
+use Pingu\Taxonomy\Entities\FieldTaxonomy;
 
 class TaxonomyServiceProvider extends ModuleServiceProvider
 {
@@ -31,7 +32,9 @@ class TaxonomyServiceProvider extends ModuleServiceProvider
         $this->registerConfig();
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'taxonomy');
         $this->registerFactories();
-        //$this->registerAssets();
+        \Content::registerContentFields([
+            FieldTaxonomy::class
+        ]);
     }
 
     /**

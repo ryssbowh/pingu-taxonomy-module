@@ -25,8 +25,8 @@ class S2019_08_06_175322010902_Install extends MigratableSeeder
         Permission::findOrCreate(['name' => 'edit taxonomy terms', 'section' => 'Taxonomy']);
         Permission::findOrCreate(['name' => 'delete taxonomy terms', 'section' => 'Taxonomy']);
 
-        $menu = Menu::findByName('admin-menu');
-        $structure = MenuItem::findByName('admin-menu.structure');
+        $menu = Menu::findByMachineName('admin-menu');
+        $structure = MenuItem::findByMachineName('admin-menu.structure');
         $tax = MenuItem::create([
             'name' => 'Taxonomy',
             'deletable' => 0,

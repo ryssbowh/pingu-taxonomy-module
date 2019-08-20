@@ -14,6 +14,9 @@ use Pingu\Taxonomy\Entities\TaxonomyItem;
 |
 */
 
+/**
+ * Vocabularies
+ */
 Route::get(Taxonomy::getUri('index'), ['uses' => 'TaxonomyJsGridController@jsGridIndex'])
 	->middleware('can:view taxonomy vocabularies');
 Route::delete(Taxonomy::getUri('delete'), ['uses' => 'AjaxTaxonomyController@delete'])
@@ -21,6 +24,9 @@ Route::delete(Taxonomy::getUri('delete'), ['uses' => 'AjaxTaxonomyController@del
 Route::put(Taxonomy::getUri('update'), ['uses' => 'AjaxTaxonomyController@update'])
 	->middleware('can:edit taxonomy vocabularies');
 
+/**
+ * Items
+ */
 Route::get(TaxonomyItem::getUri('create'), ['uses' => 'AjaxItemController@create'])
 	->middleware('can:add taxonomy terms');
 Route::post(TaxonomyItem::getUri('store'), ['uses' => 'AjaxItemController@store'])

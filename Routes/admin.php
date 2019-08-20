@@ -1,6 +1,7 @@
 <?php
 
 use Pingu\Taxonomy\Entities\Taxonomy;
+use Pingu\Taxonomy\Entities\TaxonomyItem;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,4 +35,22 @@ Route::post(Taxonomy::getUri('store'), ['uses' => 'TaxonomyController@store'])
 Route::get(Taxonomy::getUri('editItems'), ['uses' => 'TaxonomyController@editItems'])
 	->middleware('can:view taxonomy terms');
 Route::put(Taxonomy::getUri('editItems'), ['uses' => 'TaxonomyController@updateItems'])
+	->middleware('can:edit taxonomy terms');
+
+/**
+ * Items
+ */
+Route::get(TaxonomyItem::getUri('create'), ['uses' => 'AdminItemController@create'])
+	->middleware('can:add taxonomy terms');
+Route::post(TaxonomyItem::getUri('store'), ['uses' => 'AdminItemController@store'])
+	->middleware('can:add taxonomy terms');
+Route::get(TaxonomyItem::getUri('delete'), ['uses' => 'AdminItemController@confirmDelete'])
+	->middleware('can:delete taxonomy terms');
+Route::delete(TaxonomyItem::getUri('delete'), ['uses' => 'AdminItemController@delete'])
+	->middleware('can:delete taxonomy terms');
+Route::get(TaxonomyItem::getUri('edit'), ['uses' => 'AdminItemController@edit'])
+	->middleware('can:edit taxonomy terms');
+Route::put(TaxonomyItem::getUri('update'), ['uses' => 'AdminItemController@update'])
+	->middleware('can:edit taxonomy terms');
+Route::patch(TaxonomyItem::getUri('patch'), ['uses' => 'AdminItemController@patch'])
 	->middleware('can:edit taxonomy terms');
