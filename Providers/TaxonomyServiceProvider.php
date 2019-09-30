@@ -5,20 +5,15 @@ namespace Pingu\Taxonomy\Providers;
 use Illuminate\Database\Eloquent\Factory;
 use Pingu\Core\Support\ModuleServiceProvider;
 use Pingu\Taxonomy\Entities\FieldTaxonomy;
+use Pingu\Taxonomy\Entities\Taxonomy;
+use Pingu\Taxonomy\Entities\TaxonomyItem;
 
 class TaxonomyServiceProvider extends ModuleServiceProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /*
-     * Where are the models located
-     */
-    protected $modelFolder = 'Entities';
+    protected $entities = [
+        Taxonomy::class,
+        TaxonomyItem::class
+    ];
 
     /**
      * Boot the application events.
@@ -27,14 +22,14 @@ class TaxonomyServiceProvider extends ModuleServiceProvider
      */
     public function boot()
     {
-        $this->registerModelSlugs(__DIR__.'/../'.$this->modelFolder);
         $this->registerTranslations();
         $this->registerConfig();
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'taxonomy');
         $this->registerFactories();
-        \Content::registerContentFields([
-            FieldTaxonomy::class
+        \BundleField::registerBundleFields([
+            new FieldTaxonomy
         ]);
+        $this->registerEntities($this->entities);
     }
 
     /**

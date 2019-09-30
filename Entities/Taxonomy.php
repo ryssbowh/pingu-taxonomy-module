@@ -3,22 +3,24 @@
 namespace Pingu\Taxonomy\Entities;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Pingu\Core\Contracts\Models\HasContextualLinksContract;
 use Pingu\Core\Contracts\Models\HasItemsContract;
-use Pingu\Core\Entities\BaseModel;
-use Pingu\Core\Traits\Models\HasBasicCrudUris;
 use Pingu\Core\Traits\Models\HasMachineName;
+use Pingu\Entity\Contracts\Actions;
+use Pingu\Entity\Contracts\Routes;
+use Pingu\Entity\Contracts\Uris;
+use Pingu\Entity\Entities\BaseEntity;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Support\Fields\Textarea;
 use Pingu\Forms\Traits\Models\Formable;
-use Pingu\Jsgrid\Contracts\Models\JsGridableContract;
 use Pingu\Jsgrid\Fields\Text;
-use Pingu\Jsgrid\Traits\Models\JsGridable;
+use Pingu\Taxonomy\Entities\Actions\TaxonomyActions;
 use Pingu\Taxonomy\Entities\TaxonomyItem;
+use Pingu\Taxonomy\Entities\Uris\TaxonomyUris;
+use Pingu\Taxonomy\Routes\Entities\TaxonomyRoutes;
 
-class Taxonomy extends BaseModel implements JsGridableContract, HasItemsContract, HasContextualLinksContract
+class Taxonomy extends BaseEntity implements HasItemsContract
 {
-    use Formable, JsGridable, HasBasicCrudUris, HasMachineName;
+    use Formable, HasMachineName;
 
     protected $visible = ['id', 'name', 'machineName', 'description'];
 
@@ -27,6 +29,23 @@ class Taxonomy extends BaseModel implements JsGridableContract, HasItemsContract
     protected $attributes = [
     	'description' => ''
     ];
+
+    public $adminListFields = ['name', 'description'];
+
+    public function routes(): Routes
+    {
+        return new TaxonomyRoutes($this);
+    }
+
+    public function actions(): Actions
+    {
+        return new TaxonomyActions($this);
+    }
+
+    public function uris(): Uris
+    {
+        return new TaxonomyUris($this);
+    }
 
     /**
      * @inheritDoc
@@ -42,6 +61,21 @@ class Taxonomy extends BaseModel implements JsGridableContract, HasItemsContract
     public function formEditFields()
     {
         return ['name', 'description'];
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'machineName';
+    }
+
+    /**
+     * A taxonomy can have several items
+     * 
+     * @return Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function items(): Relation
+    {
+        return $this->hasMany(TaxonomyItem::class)->orderBy('weight');
     }
 
     /**
@@ -94,21 +128,6 @@ class Taxonomy extends BaseModel implements JsGridableContract, HasItemsContract
         ];
     }
 
-    public function getRouteKeyName()
-    {
-        return 'machineName';
-    }
-
-    /**
-     * A taxonomy can have several items
-     * 
-     * @return Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function items(): Relation
-    {
-        return $this->hasMany(TaxonomyItem::class)->orderBy('weight');
-    }
-
     public function jsGridFields()
     {
     	return [
@@ -142,29 +161,5 @@ class Taxonomy extends BaseModel implements JsGridableContract, HasItemsContract
     public function getRootNextWeight()
     {
         return $this->items->isEmpty() ? 0 : $this->items->last()->weight + 1;
-    }
-
-    public function getContextualLinks(): array
-    {
-        return [
-            'edit' => [
-                'title' => 'Edit',
-                'url' => $this::makeUri('edit', $this, adminPrefix())
-            ],
-            'items' => [
-                'title' => 'Items',
-                'url' => $this::makeUri('editItems', $this, adminPrefix())
-            ]
-        ];
-    }
-
-    /**
-     * Uri for editing items
-     *
-     * @return string
-     */
-    public static function editItemsUri()
-    {
-        return static::routeSlug().'/{'.static::routeSlug().'}/items';
     }
 }

@@ -15,6 +15,7 @@ class M2019_08_12_142050080221_AddTaxonomyContentField extends Migration
     {
         Schema::create('field_taxonomies', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
             $table->boolean('required');
             $table->boolean('multiple');
             $table->integer('taxonomy_id')->unsigned()->nullable();

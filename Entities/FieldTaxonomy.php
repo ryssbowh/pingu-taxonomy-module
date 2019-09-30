@@ -2,24 +2,26 @@
 
 namespace Pingu\Taxonomy\Entities;
 
-use Pingu\Content\Contracts\ContentFieldContract;
 use Pingu\Content\Traits\ContentField;
 use Pingu\Core\Entities\BaseModel;
+use Pingu\Entity\Contracts\BundleFieldContract;
+use Pingu\Entity\Traits\BundleField;
 use Pingu\Forms\Support\Fields\Checkbox;
 use Pingu\Forms\Support\Fields\ModelCheckboxes;
 use Pingu\Forms\Support\Fields\ModelSelect;
+use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Support\Types\ManyModel;
 use Pingu\Forms\Traits\Models\Formable;
 
-class FieldTaxonomy extends BaseModel implements ContentFieldContract
+class FieldTaxonomy extends BaseModel implements BundleFieldContract
 {
-	use ContentField, Formable;
+	use BundleField, Formable;
 
-    protected $fillable = ['taxonomy', 'required', 'multiple'];
+    protected $fillable = ['name', 'taxonomy', 'required', 'multiple'];
 
     protected $casts = [
-        'required' => false,
-        'multiple' => false
+        'required' => 'boolean',
+        'multiple' => 'boolean'
     ];
 
     public function taxonomy()
@@ -32,7 +34,7 @@ class FieldTaxonomy extends BaseModel implements ContentFieldContract
      */
     public function formAddFields()
     {
-        return ['taxonomy', 'required', 'multiple'];
+        return ['name', 'taxonomy', 'required', 'multiple'];
     }
 
     /**
@@ -40,7 +42,7 @@ class FieldTaxonomy extends BaseModel implements ContentFieldContract
      */
     public function formEditFields()
     {
-        return ['taxonomy', 'required', 'multiple'];
+        return ['name', 'taxonomy', 'required', 'multiple'];
     }
 
     /**
@@ -59,6 +61,12 @@ class FieldTaxonomy extends BaseModel implements ContentFieldContract
                     'allowNoValue' => false
                 ]
             ],
+            'name' => [
+                'field' => TextInput::class,
+                'attributes' => [
+                    'required' => true
+                ]
+            ],
             'required' => [
                 'field' => Checkbox::class
             ],
@@ -75,6 +83,7 @@ class FieldTaxonomy extends BaseModel implements ContentFieldContract
     {
         return [
             'taxonomy' => 'required|exists:taxonomies,id',
+            'name' => 'required|string',
             'required' => 'sometimes',
             'multiple' => 'sometimes'
         ];
@@ -91,7 +100,7 @@ class FieldTaxonomy extends BaseModel implements ContentFieldContract
     /**
      * @inheritDoc
      */
-    public static function friendlyName()
+    public static function friendlyName(): string
     {
     	return 'Taxonomy Terms';
     }
@@ -99,7 +108,7 @@ class FieldTaxonomy extends BaseModel implements ContentFieldContract
     /**
      * @inheritDoc
      */
-    public function fieldDefinition()
+    public function bundleFieldDefinition()
     {
         return [
             'field' => ModelSelect::class,
@@ -118,7 +127,7 @@ class FieldTaxonomy extends BaseModel implements ContentFieldContract
     /**
      * @inheritDoc
      */
-    public function fieldValidationRules()
+    public function bundleFieldValidationRule()
     {
         return ($this->required ? 'required|' : '') . 'exists:taxonomy_items,id';
     }
@@ -126,7 +135,7 @@ class FieldTaxonomy extends BaseModel implements ContentFieldContract
     /**
      * @inheritDoc
      */
-    public function fieldValidationMessages()
+    public function bundleFieldValidationMessages()
     {
         return [];
     }

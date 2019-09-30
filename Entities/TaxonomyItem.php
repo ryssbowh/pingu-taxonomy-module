@@ -4,21 +4,22 @@ namespace Pingu\Taxonomy\Entities;
 
 use Illuminate\Support\Str;
 use Pingu\Core\Contracts\Models\HasChildrenContract;
-use Pingu\Core\Contracts\Models\HasCrudUrisContract;
-use Pingu\Core\Entities\BaseModel;
-use Pingu\Core\Traits\Models\HasBasicCrudUris;
 use Pingu\Core\Traits\Models\HasChildren;
 use Pingu\Core\Traits\Models\HasMachineName;
-use Pingu\Forms\Contracts\Models\FormableContract;
+use Pingu\Entity\Contracts\Routes;
+use Pingu\Entity\Contracts\Uris;
+use Pingu\Entity\Entities\BaseEntity;
 use Pingu\Forms\Support\Fields\ModelSelect;
 use Pingu\Forms\Support\Fields\NumberInput;
 use Pingu\Forms\Support\Fields\TextInput;
 use Pingu\Forms\Traits\Models\Formable;
 use Pingu\Taxonomy\Entities\Taxonomy;
+use Pingu\Taxonomy\Entities\Uris\TaxonomyItemUris;
+use Pingu\Taxonomy\Routes\Entities\TaxonomyItemRoutes;
 
-class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableContract, HasCrudUrisContract
+class TaxonomyItem extends BaseEntity implements HasChildrenContract
 {
-    use HasChildren, Formable, HasBasicCrudUris, HasMachineName;
+    use HasChildren, Formable, HasMachineName;
 
     protected $visible = ['id', 'weight', 'name', 'taxonomy', 'description'];
 
@@ -37,6 +38,16 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
         });
     }
 
+    public function routes(): Routes
+    {
+        return new TaxonomyItemRoutes($this);
+    }
+
+    public function uris(): Uris
+    {
+        return new TaxonomyItemUris($this);
+    }
+
     public function taxonomy()
     {
     	return $this->belongsTo(Taxonomy::class);
@@ -47,7 +58,7 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
      */
     public function formAddFields()
     {
-        return ['name', 'description'];
+        return ['name', 'description', 'taxonomy', 'parent'];
     }
 
     /**
@@ -55,7 +66,7 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
      */
     public function formEditFields()
     {
-        return ['name', 'description'];
+        return ['name', 'description', 'taxonomy', 'parent'];
     }
 
     /**
@@ -166,53 +177,5 @@ class TaxonomyItem extends BaseModel implements HasChildrenContract, FormableCon
         }
         $item->save();
         return $item;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function createUri()
-    {
-        return static::storeUri().'/create';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function storeUri()
-    {
-        return Taxonomy::routeSlug().'/{'.Taxonomy::routeSlug().'}/'.static::routeSlugs();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function deleteUri()
-    {
-        return static::updateUri().'/delete';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function editUri()
-    {
-        return static::updateUri().'/edit';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function updateUri()
-    {
-        return static::routeSlugs().'/{'.static::routeSlug().'}';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function patchUri()
-    {
-        return static::routeSlugs();
     }
 }
