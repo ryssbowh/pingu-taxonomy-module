@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class M2019_08_09_180346486495_Install extends Migration
+class M2019_08_09_180346486495_InstallTaxonomy extends Migration
 {
     /**
      * Run the migrations.
@@ -27,9 +27,9 @@ class M2019_08_09_180346486495_Install extends Migration
             $table->string('machineName')->unique();
             $table->text('description');
             $table->integer('taxonomy_id')->unsigned();
-            $table->foreign('taxonomy_id')->references('id')->on('taxonomies');
+            $table->foreign('taxonomy_id')->references('id')->on('taxonomies')->onDelete('cascade');;
             $table->integer('parent_id')->unsigned()->nullable();
-            $table->foreign('parent_id')->references('id')->on('taxonomy_items');
+            $table->foreign('parent_id')->references('id')->on('taxonomy_items')->onDelete('set null');;
             $table->integer('weight')->unsigned();
             $table->timestamps();
         });

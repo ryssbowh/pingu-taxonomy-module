@@ -2,13 +2,21 @@
 
 namespace Pingu\Taxonomy\Http\Controllers;
 
-use Pingu\Entity\Entities\BaseEntity;
+use Pingu\Entity\Entities\Entity;
 use Pingu\Entity\Http\Controllers\AdminEntityController;
+use Pingu\Forms\Support\Form;
 use Pingu\Taxonomy\Entities\Taxonomy;
 use Pingu\Taxonomy\Entities\TaxonomyItem;
 
 class TaxonomyAdminController extends AdminEntityController
 {
+    /**
+     * Edit items action
+     * 
+     * @param Taxonomy $taxonomy
+     * 
+     * @return view
+     */
     public function editItems(Taxonomy $taxonomy)
     {
         \ContextualLinks::addFromObject($taxonomy);
@@ -17,25 +25,36 @@ class TaxonomyAdminController extends AdminEntityController
         return view('taxonomy::indexItems')->with([
             'taxonomy' => $taxonomy, 
             'items' => $taxonomy->getRootItems(),
-            'addItemUri' => $item->uris()->make('create', $taxonomy, adminPrefix()),
-            'deleteItemUri' => $item->uris()->make('delete', [], adminPrefix()),
-            'editItemUri' => $item->uris()->make('edit', [], adminPrefix()),
-            'patchItemsUri' => $taxonomy->uris()->make('patchItems', $taxonomy, adminPrefix())
+            'addItemUri' => $item::uris()->make('create', $taxonomy, adminPrefix()),
+            'deleteItemUri' => $item::uris()->make('delete', [], adminPrefix()),
+            'editItemUri' => $item::uris()->make('edit', [], adminPrefix()),
+            'patchItemsUri' => TaxonomyItem::uris()->make('patch', $taxonomy, adminPrefix())
         ]);
     }
 
-    public function saveItems(Taxonomy $taxonomy)
-    {
-        
-    }
-
-    protected function getStoreUri(BaseEntity $entity)
-    {
-        return ['url' => (new TaxonomyItem)->uris()->make('store', $entity, adminPrefix())];
-    }
-
-    protected function onSuccessfullStore(BaseEntity $taxonomy)
+    /**
+     * @inheritDoc
+     */
+    protected function onStoreSuccess(Entity $taxonomy)
     {
         return redirect()->route('taxonomy.admin.taxonomy');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterEditFormCreated(Form $form, Entity $entity)
+    {
+        $form->getElement('machineName')->attribute('disabled', true);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterCreateFormCreated(Form $form, Entity $entity)
+    {
+        $field = $form->getElement('machineName');
+        $field->classes->add('js-dashify');
+        $field->attribute('data-dashifyfrom', 'name');
     }
 }

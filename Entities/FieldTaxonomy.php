@@ -2,28 +2,30 @@
 
 namespace Pingu\Taxonomy\Entities;
 
-use Pingu\Content\Traits\ContentField;
 use Pingu\Core\Entities\BaseModel;
-use Pingu\Entity\Contracts\BundleFieldContract;
-use Pingu\Entity\Traits\BundleField;
-use Pingu\Forms\Support\Fields\Checkbox;
-use Pingu\Forms\Support\Fields\ModelCheckboxes;
+use Pingu\Field\Contracts\BundleFieldContract;
+use Pingu\Field\Traits\BundleField;
+use Pingu\Forms\Support\Field;
 use Pingu\Forms\Support\Fields\ModelSelect;
-use Pingu\Forms\Support\Fields\TextInput;
-use Pingu\Forms\Support\Types\ManyModel;
-use Pingu\Forms\Traits\Models\Formable;
+use Pingu\Taxonomy\Entities\Taxonomy;
+use Pingu\Taxonomy\Entities\TaxonomyItem;
 
 class FieldTaxonomy extends BaseModel implements BundleFieldContract
 {
-	use BundleField, Formable;
+    use BundleField;
 
-    protected $fillable = ['name', 'taxonomy', 'required', 'multiple'];
+    protected $fillable = ['taxonomy', 'required', 'multiple'];
 
     protected $casts = [
         'required' => 'boolean',
         'multiple' => 'boolean'
     ];
 
+    /**
+     * Taxonomy relation
+     * 
+     * @return BelongsTo
+     */
     public function taxonomy()
     {
         return $this->belongsTo(Taxonomy::class);
@@ -32,69 +34,31 @@ class FieldTaxonomy extends BaseModel implements BundleFieldContract
     /**
      * @inheritDoc
      */
-    public function formAddFields()
+    public function defaultValue()
     {
-        return ['name', 'taxonomy', 'required', 'multiple'];
+        return $this->default;
     }
 
     /**
      * @inheritDoc
      */
-    public function formEditFields()
+    public function singleFormValue($value)
     {
-        return ['name', 'taxonomy', 'required', 'multiple'];
+        return array_map(
+            function ($value) {
+                return $value->getKey();
+            }, $value
+        );
     }
 
     /**
      * @inheritDoc
      */
-    public function fieldDefinitions()
+    public function castSingleValue($value)
     {
-        return [
-            'taxonomy' => [
-                'field' => ModelSelect::class,
-                'options' => [
-                    'label' => 'Vocabulary',
-                    'model' => Taxonomy::class,
-                    'textField' => 'name',
-                    'multiple' => false,
-                    'allowNoValue' => false
-                ]
-            ],
-            'name' => [
-                'field' => TextInput::class,
-                'attributes' => [
-                    'required' => true
-                ]
-            ],
-            'required' => [
-                'field' => Checkbox::class
-            ],
-            'multiple' => [
-                'field' => Checkbox::class
-            ]
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function validationRules()
-    {
-        return [
-            'taxonomy' => 'required|exists:taxonomies,id',
-            'name' => 'required|string',
-            'required' => 'sometimes',
-            'multiple' => 'sometimes'
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function validationMessages()
-    {
-        return [];
+        if ($value) {
+            return TaxonomyItem::find($value);
+        }
     }
 
     /**
@@ -102,49 +66,41 @@ class FieldTaxonomy extends BaseModel implements BundleFieldContract
      */
     public static function friendlyName(): string
     {
-    	return 'Taxonomy Terms';
+        return 'Taxonomy Terms';
     }
     
     /**
      * @inheritDoc
      */
-    public function bundleFieldDefinition()
+    public function toSingleFormField(): Field
     {
-        return [
-            'field' => ModelSelect::class,
-            'options' => [
+        return new ModelSelect(
+            $this->machineName,
+            [
                 'model' => TaxonomyItem::class,
                 'items' => $this->taxonomy->items,
                 'textField' => 'name',
                 'allowNoValue' => !$this->required
             ],
-            'attributes' => [
+            [
                 'multiple' => $this->multiple
             ]
-        ];
+        );
     }
 
     /**
      * @inheritDoc
      */
-    public function bundleFieldValidationRule()
+    protected function defaultValidationRule(): string
     {
-        return ($this->required ? 'required|' : '') . 'exists:taxonomy_items,id';
+        return 'bail|' . ($this->required ? 'required|' : '') . 'exists:taxonomy_items,id|taxonomy_vocabulary:'.$this->taxonomy_id;
     }
 
     /**
      * @inheritDoc
      */
-    public function bundleFieldValidationMessages()
+    public function fixedCardinality()
     {
-        return [];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function getMachineName()
-    {
-        return 'taxonomy';
+        return 1;
     }
 }

@@ -8,25 +8,22 @@ use Pingu\Core\Traits\Models\HasChildren;
 use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Entity\Contracts\Routes;
 use Pingu\Entity\Contracts\Uris;
-use Pingu\Entity\Entities\BaseEntity;
-use Pingu\Forms\Support\Fields\ModelSelect;
-use Pingu\Forms\Support\Fields\NumberInput;
-use Pingu\Forms\Support\Fields\TextInput;
-use Pingu\Forms\Traits\Models\Formable;
+use Pingu\Entity\Entities\Entity;
+use Pingu\Taxonomy\Entities\Policies\TaxonomyItemPolicy;
 use Pingu\Taxonomy\Entities\Taxonomy;
 use Pingu\Taxonomy\Entities\Uris\TaxonomyItemUris;
 use Pingu\Taxonomy\Routes\Entities\TaxonomyItemRoutes;
 
-class TaxonomyItem extends BaseEntity implements HasChildrenContract
+class TaxonomyItem extends Entity implements HasChildrenContract
 {
-    use HasChildren, Formable, HasMachineName;
+    use HasChildren, HasMachineName;
 
     protected $visible = ['id', 'weight', 'name', 'taxonomy', 'description'];
 
     protected $fillable = ['weight', 'name', 'taxonomy', 'description'];
 
     protected $attributes = [
-    	'description' => ''
+        'description' => ''
     ];
 
     protected static function boot()
@@ -38,98 +35,23 @@ class TaxonomyItem extends BaseEntity implements HasChildrenContract
         });
     }
 
-    public function routes(): Routes
+    /**
+     * @inheritDoc
+     */
+    public function getPolicy(): string
     {
-        return new TaxonomyItemRoutes($this);
+        return TaxonomyItemPolicy::class;
     }
 
-    public function uris(): Uris
-    {
-        return new TaxonomyItemUris($this);
-    }
-
+    /**
+     * taxonomy relation
+     * 
+     * @return BelongsTo
+     */
     public function taxonomy()
     {
-    	return $this->belongsTo(Taxonomy::class);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function formAddFields()
-    {
-        return ['name', 'description', 'taxonomy', 'parent'];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function formEditFields()
-    {
-        return ['name', 'description', 'taxonomy', 'parent'];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function fieldDefinitions()
-    {
-        return [
-            'name' => [
-                'field' => TextInput::class
-            ],
-            'description' => [
-                'field' => TextInput::class
-            ],
-            'weight' => [
-                'field' => NumberInput::class
-            ],
-            'taxonomy' => [
-                'field' => ModelSelect::class,
-                'options' => [
-                    'model' => Taxonomy::class,
-                    'textField' => 'name',
-                    'default' => $this->taxonomy,
-                    'allowNoValue' => false,
-                ]
-            ],
-            'parent' => [
-                'field' => ModelSelect::class,
-                'options' => [
-                    'model' => TaxonomyItem::class,
-                    'textField' => 'name',
-                    'default' => $this->parent
-                ]
-            ]
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function validationRules()
-    {
-        return [
-            'name' => 'required',
-            'taxonomy' => 'required|exists:taxonomies,id',
-            'parent' => 'sometimes|exists:taxonomy_items,id',
-            'weight' => 'nullable|integer',
-            'description' => 'string'
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function validationMessages()
-    {
-        return [
-            'name.required' => 'Name is required',
-            'taxonomy.required' => 'Taxonomy is required',
-            'parent.exists' => 'Parent must be a taxonomy item',
-            'taxonomy.exists' => 'Taxonomy must be a taxonomy',
-        ];
-    }  
+        return $this->belongsTo(Taxonomy::class);
+    } 
 
     /**
      * Generate a machine name for this item
@@ -172,7 +94,7 @@ class TaxonomyItem extends BaseEntity implements HasChildrenContract
         $item = new static;
         $item->fill($values);
         $item->taxonomy()->associate($menu);
-        if($parent){
+        if ($parent) {
             $item->parent()->associate($parent);
         }
         $item->save();

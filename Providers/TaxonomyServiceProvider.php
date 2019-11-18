@@ -26,10 +26,11 @@ class TaxonomyServiceProvider extends ModuleServiceProvider
         $this->registerConfig();
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'taxonomy');
         $this->registerFactories();
-        \BundleField::registerBundleFields([
-            new FieldTaxonomy
+        $this->extendsValidator();
+
+        \Field::registerBundleFields([
+            FieldTaxonomy::class
         ]);
-        $this->registerEntities($this->entities);
     }
 
     /**
@@ -51,6 +52,27 @@ class TaxonomyServiceProvider extends ModuleServiceProvider
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
         $this->app->register(AuthServiceProvider::class);
+        $this->registerEntities($this->entities);
+    }
+
+    protected function extendsValidator()
+    {
+        /**
+         * Rule that checks term belongs to a vocabulary
+         */
+        \Validator::extend(
+            'taxonomy_vocabulary', function ($attribute, $value, $vocabulary, $validator) {
+                $item = TaxonomyItem::find($value);
+                if (is_null($item)) {
+                    return false;
+                }
+                if ($item->taxonomy->id != $vocabulary[0]) {
+                    return false;
+                }
+                return true;
+            }
+        );
+
     }
 
     /**

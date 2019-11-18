@@ -3,7 +3,7 @@
     "alias": "taxonomy",
     "description": "Defines vocabularies and items",
     "keywords": [],
-    "order": 10,
+    "order": -20,
     "core": 1,
     "providers": [
         "Pingu\\Taxonomy\\Providers\\TaxonomyServiceProvider"

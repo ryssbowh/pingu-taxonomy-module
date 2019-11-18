@@ -3,26 +3,14 @@
 namespace Pingu\Taxonomy\Entities\Uris;
 
 use Pingu\Entity\Support\BaseEntityUris;
+use Pingu\Taxonomy\Entities\Taxonomy;
 
 class TaxonomyUris extends BaseEntityUris
 {
-	/**
-     * Uri for editing items
-     *
-     * @return string
-     */
-    public function editItems()
+    protected function uris(): array
     {
-        return $this->object::routeSlug().'/{'.$this->object::routeSlug().'}/items';
-    }
-
-    /**
-     * Uri for editing items
-     *
-     * @return string
-     */
-    public function patchItems()
-    {
-        return $this->editItems();
+        return [
+            'editItems' => Taxonomy::routeSlug().'/{'.Taxonomy::routeSlug().'}/items'
+        ];
     }
 }
