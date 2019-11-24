@@ -2,6 +2,7 @@
 
 namespace Pingu\Taxonomy\Http\Controllers;
 
+use Pingu\Entity\Contracts\BundleContract;
 use Pingu\Entity\Entities\Entity;
 use Pingu\Entity\Http\Controllers\AjaxEntityController;
 use Pingu\Forms\Support\Form;
@@ -12,7 +13,7 @@ class TaxonomyItemAjaxController extends AjaxEntityController
     /**
      * @inheritDoc
      */
-    protected function getStoreUri(Entity $entity)
+    protected function getStoreUri(Entity $entity, ?BundleContract $bundle)
     {
         $taxonomy = $this->routeParameter(Taxonomy::routeSlug());
         return ['url' => $entity->uris()->make('store', $taxonomy, adminPrefix())];

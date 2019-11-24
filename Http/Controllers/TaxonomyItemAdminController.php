@@ -3,6 +3,7 @@
 namespace Pingu\Taxonomy\Http\Controllers;
 
 use Illuminate\Support\Collection;
+use Pingu\Entity\Contracts\BundleContract;
 use Pingu\Entity\Entities\Entity;
 use Pingu\Entity\Http\Controllers\AdminEntityController;
 use Pingu\Forms\Support\Form;
@@ -10,7 +11,7 @@ use Pingu\Taxonomy\Entities\Taxonomy;
 
 class TaxonomyItemAdminController extends AdminEntityController
 {
-    protected function getStoreUri(Entity $entity)
+    protected function getStoreUri(Entity $entity, ?BundleContract $bundle)
     {
         $taxonomy = $this->routeParameter(Taxonomy::routeSlug());
         return ['url' => $entity->uris()->make('store', $taxonomy, adminPrefix())];
