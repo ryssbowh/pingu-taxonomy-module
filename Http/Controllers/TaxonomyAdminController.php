@@ -22,14 +22,16 @@ class TaxonomyAdminController extends AdminEntityController
         \ContextualLinks::addFromObject($taxonomy);
         $item = new TaxonomyItem;
 
-        return view('taxonomy::indexItems')->with([
+        return view('taxonomy::indexItems')->with(
+            [
             'taxonomy' => $taxonomy, 
             'items' => $taxonomy->getRootItems(),
             'addItemUri' => $item::uris()->make('create', $taxonomy, adminPrefix()),
             'deleteItemUri' => $item::uris()->make('delete', [], adminPrefix()),
             'editItemUri' => $item::uris()->make('edit', [], adminPrefix()),
             'patchItemsUri' => TaxonomyItem::uris()->make('patch', $taxonomy, adminPrefix())
-        ]);
+            ]
+        );
     }
 
     /**

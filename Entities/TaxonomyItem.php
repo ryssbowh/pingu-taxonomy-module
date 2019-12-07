@@ -30,9 +30,11 @@ class TaxonomyItem extends Entity implements HasChildrenContract
     {
         parent::boot();
 
-        static::creating(function($item){
-            $item->generateMachineName();
-        });
+        static::creating(
+            function ($item) {
+                $item->generateMachineName();
+            }
+        );
     }
 
     /**
@@ -62,7 +64,7 @@ class TaxonomyItem extends Entity implements HasChildrenContract
     {
         $name = Str::kebab($this->name);
         $parent = $this->parent;
-        if($parent){
+        if($parent) {
             $name = Str::kebab($parent->machineName).'.'.$name;
         }
         else{
@@ -75,12 +77,12 @@ class TaxonomyItem extends Entity implements HasChildrenContract
     /**
      * Overrides save to add a default weight
      * 
-     * @param  array  $options
+     * @param  array $options
      * @return bool
      */
     public function save(array $options = [])
     {
-        if(is_null($this->weight)){
+        if(is_null($this->weight)) {
             $this->weight = $this->taxonomy->getRootNextWeight();
         }
         return parent::save($options);

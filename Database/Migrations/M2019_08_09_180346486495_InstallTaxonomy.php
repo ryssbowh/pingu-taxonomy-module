@@ -13,26 +13,30 @@ class M2019_08_09_180346486495_InstallTaxonomy extends Migration
      */
     public function up()
     {
-        Schema::create('taxonomies', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('machineName')->unique();
-            $table->string('name');
-            $table->text('description');
-            $table->timestamps();
-        });
+        Schema::create(
+            'taxonomies', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('machineName')->unique();
+                $table->string('name');
+                $table->text('description');
+                $table->timestamps();
+            }
+        );
 
-        Schema::create('taxonomy_items', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->string('machineName')->unique();
-            $table->text('description');
-            $table->integer('taxonomy_id')->unsigned();
-            $table->foreign('taxonomy_id')->references('id')->on('taxonomies')->onDelete('cascade');;
-            $table->integer('parent_id')->unsigned()->nullable();
-            $table->foreign('parent_id')->references('id')->on('taxonomy_items')->onDelete('set null');;
-            $table->integer('weight')->unsigned();
-            $table->timestamps();
-        });
+        Schema::create(
+            'taxonomy_items', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name');
+                $table->string('machineName')->unique();
+                $table->text('description');
+                $table->integer('taxonomy_id')->unsigned();
+                $table->foreign('taxonomy_id')->references('id')->on('taxonomies')->onDelete('cascade');;
+                $table->integer('parent_id')->unsigned()->nullable();
+                $table->foreign('parent_id')->references('id')->on('taxonomy_items')->onDelete('set null');;
+                $table->integer('weight')->unsigned();
+                $table->timestamps();
+            }
+        );
     }
 
     /**

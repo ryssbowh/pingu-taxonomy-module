@@ -6,7 +6,8 @@ use Pingu\Entity\Support\BaseEntityUris;
 use Pingu\Taxonomy\Entities\Taxonomy;
 
 class TaxonomyItemUris extends BaseEntityUris
-{   
+{
+   
     protected function uris(): array
     {
         return [

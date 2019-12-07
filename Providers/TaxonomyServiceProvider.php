@@ -28,9 +28,11 @@ class TaxonomyServiceProvider extends ModuleServiceProvider
         $this->registerFactories();
         $this->extendsValidator();
 
-        \Field::registerBundleFields([
+        \Field::registerBundleFields(
+            [
             FieldTaxonomy::class
-        ]);
+            ]
+        );
     }
 
     /**

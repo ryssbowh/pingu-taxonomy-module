@@ -27,18 +27,22 @@ class S2019_08_06_175322010902_Install extends MigratableSeeder
 
         $menu = Menu::findByMachineName('admin-menu');
         $structure = MenuItem::findByMachineName('admin-menu.structure');
-        $tax = MenuItem::create([
+        $tax = MenuItem::create(
+            [
             'name' => 'Taxonomy',
             'deletable' => 0,
             'url' => 'taxonomy.admin.taxonomy',
             'permission_id' => $perm->id,
             'active' => 1
-        ], $menu, $structure);
+            ], $menu, $structure
+        );
 
-        $tag = Taxonomy::create([
+        $tag = Taxonomy::create(
+            [
             'name' => 'Tags',
             'machineName' => 'tags'
-        ]);
+            ]
+        );
     }
 
     /**
