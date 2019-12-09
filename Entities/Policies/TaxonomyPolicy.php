@@ -2,11 +2,11 @@
 
 namespace Pingu\Taxonomy\Entities\Policies;
 
-use Pingu\Core\Support\Policy;
+use Pingu\Entity\Support\BaseEntityPolicy;
 use Pingu\Taxonomy\Entities\Taxonomy;
 use Pingu\User\Entities\User;
 
-class TaxonomyPolicy extends Policy
+class TaxonomyPolicy extends BaseEntityPolicy
 {
     protected function userOrGuest(?User $user)
     {
