@@ -2,24 +2,22 @@
 
 namespace Pingu\Taxonomy\Entities;
 
-use Pingu\Core\Entities\BaseModel;
-use Pingu\Field\Contracts\BundleFieldContract;
-use Pingu\Field\Traits\BundleField;
+use Pingu\Field\Entities\BaseBundleField;
 use Pingu\Forms\Support\Field;
-use Pingu\Forms\Support\Fields\ModelSelect;
+use Pingu\Forms\Support\Fields\Select;
 use Pingu\Taxonomy\Entities\Taxonomy;
 use Pingu\Taxonomy\Entities\TaxonomyItem;
 
-class FieldTaxonomy extends BaseModel implements BundleFieldContract
+class FieldTaxonomy extends BaseBundleField
 {
-    use BundleField;
-
     protected $fillable = ['taxonomy', 'required', 'multiple'];
 
     protected $casts = [
         'required' => 'boolean',
         'multiple' => 'boolean'
     ];
+
+    protected static $availableWidgets = [Select::class];
 
     /**
      * Taxonomy relation
@@ -72,18 +70,17 @@ class FieldTaxonomy extends BaseModel implements BundleFieldContract
     /**
      * @inheritDoc
      */
-    public function toSingleFormField(): Field
+    public function toSingleFormField($value): Field
     {
-        return new ModelSelect(
+        return new Select(
             $this->machineName,
             [
                 'model' => TaxonomyItem::class,
                 'items' => $this->taxonomy->items,
                 'textField' => 'name',
-                'allowNoValue' => !$this->required
-            ],
-            [
-                'multiple' => $this->multiple
+                'allowNoValue' => !$this->required,
+                'multiple' => $this->multiple,
+                'valueField' => 'id'
             ]
         );
     }
@@ -91,7 +88,7 @@ class FieldTaxonomy extends BaseModel implements BundleFieldContract
     /**
      * @inheritDoc
      */
-    protected function defaultValidationRule(): string
+    public function defaultValidationRule(): string
     {
         return 'bail|' . ($this->required ? 'required|' : '') . 'exists:taxonomy_items,id|taxonomy_vocabulary:'.$this->taxonomy_id;
     }

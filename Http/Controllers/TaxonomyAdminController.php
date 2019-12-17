@@ -47,7 +47,7 @@ class TaxonomyAdminController extends AdminEntityController
      */
     protected function afterEditFormCreated(Form $form, Entity $entity)
     {
-        $form->getElement('machineName')->attribute('disabled', true);
+        $form->getElement('machineName')->option('disabled', true);
     }
 
     /**
@@ -57,6 +57,6 @@ class TaxonomyAdminController extends AdminEntityController
     {
         $field = $form->getElement('machineName');
         $field->classes->add('js-dashify');
-        $field->attribute('data-dashifyfrom', 'name');
+        $field->option('data-dashifyfrom', 'name');
     }
 }
