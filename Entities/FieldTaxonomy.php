@@ -73,10 +73,11 @@ class FieldTaxonomy extends BaseBundleField
     public function toSingleFormField($value): Field
     {
         return new Select(
-            $this->machineName,
+            $this->machineName(),
             [
+                'showLabel' => false,
                 'model' => TaxonomyItem::class,
-                'items' => $this->taxonomy->items,
+                'items' => $this->taxonomy->items->keyBy('id')->pluck('name')->all(),
                 'textField' => 'name',
                 'allowNoValue' => !$this->required,
                 'multiple' => $this->multiple,
