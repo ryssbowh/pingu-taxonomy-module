@@ -6,6 +6,7 @@ use Pingu\Menu\Entities\Menu;
 use Pingu\Menu\Entities\MenuItem;
 use Pingu\Permissions\Entities\Permission;
 use Pingu\Taxonomy\Entities\Taxonomy;
+use Pingu\User\Entities\Role;
 
 class S2019_08_06_175322010902_Install extends MigratableSeeder
 {
@@ -16,14 +17,19 @@ class S2019_08_06_175322010902_Install extends MigratableSeeder
      */
     public function run(): void
     {
+        $admin = Role::findByName('Admin');
         $perm = Permission::findOrCreate(['name' => 'view taxonomy vocabularies', 'section' => 'Taxonomy']);
-        Permission::findOrCreate(['name' => 'edit taxonomy vocabularies', 'section' => 'Taxonomy']);
-        Permission::findOrCreate(['name' => 'delete taxonomy vocabularies', 'section' => 'Taxonomy']);
-        Permission::findOrCreate(['name' => 'add taxonomy vocabularies', 'section' => 'Taxonomy']);
-        Permission::findOrCreate(['name' => 'view taxonomy terms', 'section' => 'Taxonomy']);
-        Permission::findOrCreate(['name' => 'add taxonomy terms', 'section' => 'Taxonomy']);
-        Permission::findOrCreate(['name' => 'edit taxonomy terms', 'section' => 'Taxonomy']);
-        Permission::findOrCreate(['name' => 'delete taxonomy terms', 'section' => 'Taxonomy']);
+
+        $admin->givePermissionTo([
+            $perm,
+            Permission::findOrCreate(['name' => 'edit taxonomy vocabularies', 'section' => 'Taxonomy']),
+            Permission::findOrCreate(['name' => 'delete taxonomy vocabularies', 'section' => 'Taxonomy']),
+            Permission::findOrCreate(['name' => 'add taxonomy vocabularies', 'section' => 'Taxonomy']),
+            Permission::findOrCreate(['name' => 'view taxonomy terms', 'section' => 'Taxonomy']),
+            Permission::findOrCreate(['name' => 'add taxonomy terms', 'section' => 'Taxonomy']),
+            Permission::findOrCreate(['name' => 'edit taxonomy terms', 'section' => 'Taxonomy']),
+            Permission::findOrCreate(['name' => 'delete taxonomy terms', 'section' => 'Taxonomy'])
+        ]);
 
         $menu = Menu::findByMachineName('admin-menu');
         $structure = MenuItem::findByMachineName('admin-menu.structure');
