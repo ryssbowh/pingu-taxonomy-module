@@ -87,6 +87,9 @@ class TaxonomyServiceProvider extends ModuleServiceProvider
         $this->mergeConfigFrom(
             __DIR__.'/../Config/config.php', 'taxonomy'
         );
+        $this->publishes([
+            __DIR__.'/../Config/config.php' => config_path('module-taxonomy.php')
+        ], 'config');
     }
 
     /**
