@@ -4,6 +4,7 @@ namespace Pingu\Taxonomy\Entities;
 
 use Pingu\Field\Entities\BaseBundleField;
 use Pingu\Forms\Support\Field;
+use Pingu\Forms\Support\Fields\Checkboxes;
 use Pingu\Forms\Support\Fields\Select;
 use Pingu\Taxonomy\Entities\Taxonomy;
 use Pingu\Taxonomy\Entities\TaxonomyItem;
@@ -17,7 +18,7 @@ class FieldTaxonomy extends BaseBundleField
         'multiple' => 'boolean'
     ];
 
-    protected static $availableWidgets = [Select::class];
+    protected static $availableWidgets = [Select::class, Checkboxes::class];
 
     /**
      * Taxonomy relation
@@ -40,7 +41,19 @@ class FieldTaxonomy extends BaseBundleField
     /**
      * @inheritDoc
      */
-    public function singleFormValue($value)
+    public function castSingleValueToDb($value)
+    {
+        return json_encode(array_map(
+            function ($value) {
+                return $value->getKey();
+            }, $value), true
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function castToSingleFormValue($value)
     {
         return array_map(
             function ($value) {
@@ -52,11 +65,21 @@ class FieldTaxonomy extends BaseBundleField
     /**
      * @inheritDoc
      */
+    public function castSingleValueFromDb($value)
+    {
+        return $value ? json_decode($value) : [];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function castSingleValue($value)
     {
-        if ($value) {
-            return TaxonomyItem::find($value);
-        }
+        return array_map(
+            function ($value) {
+                return TaxonomyItem::find($value);
+            }, $value ?? []
+        );
     }
 
     /**
@@ -72,18 +95,20 @@ class FieldTaxonomy extends BaseBundleField
      */
     public function toSingleFormField($value): Field
     {
-        return new Select(
+        $field = (new Select(
             $this->machineName(),
             [
                 'showLabel' => false,
                 'model' => TaxonomyItem::class,
-                'items' => $this->taxonomy->items->keyBy('id')->pluck('name')->all(),
+                'items' => $this->taxonomy->items->pluck('name', 'id')->all(),
                 'textField' => 'name',
                 'allowNoValue' => !$this->required,
                 'multiple' => $this->multiple,
-                'valueField' => 'id'
+                'valueField' => 'id',
+                'default' => $value
             ]
-        );
+        ))->setHtmlName($this->machineName().'[][]');
+        return $field;
     }
 
     /**
