@@ -22,7 +22,7 @@ class TaxonomyAdminController extends AdminEntityController
         \ContextualLinks::addFromObject($taxonomy);
         $item = new TaxonomyItem;
 
-        return view('taxonomy::indexItems')->with(
+        return view('pages.taxonomy.indexItems')->with(
             [
             'taxonomy' => $taxonomy, 
             'items' => $taxonomy->getRootItems(),
