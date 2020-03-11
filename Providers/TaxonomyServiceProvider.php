@@ -24,7 +24,7 @@ class TaxonomyServiceProvider extends ModuleServiceProvider
     {
         $this->registerTranslations();
         $this->registerConfig();
-        $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'taxonomy');
+        $this->loadModuleViewsFrom(__DIR__ . '/../Resources/views', 'taxonomy');
         $this->registerFactories();
         $this->extendsValidator();
 
