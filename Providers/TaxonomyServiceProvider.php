@@ -7,6 +7,7 @@ use Pingu\Core\Support\ModuleServiceProvider;
 use Pingu\Taxonomy\Entities\FieldTaxonomy;
 use Pingu\Taxonomy\Entities\Taxonomy;
 use Pingu\Taxonomy\Entities\TaxonomyItem;
+use Pingu\Taxonomy\Validation\TaxonomyRules;
 
 class TaxonomyServiceProvider extends ModuleServiceProvider
 {
@@ -59,22 +60,7 @@ class TaxonomyServiceProvider extends ModuleServiceProvider
 
     protected function extendsValidator()
     {
-        /**
-         * Rule that checks term belongs to a vocabulary
-         */
-        \Validator::extend(
-            'taxonomy_vocabulary', function ($attribute, $value, $vocabulary, $validator) {
-                $item = TaxonomyItem::find($value);
-                if (is_null($item)) {
-                    return false;
-                }
-                if ($item->taxonomy->id != $vocabulary[0]) {
-                    return false;
-                }
-                return true;
-            }
-        );
-
+        \Validator::extend('taxonomy_vocabulary', TaxonomyRules::class.'@vocabulary');
     }
 
     /**

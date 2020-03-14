@@ -20,6 +20,8 @@ class FieldTaxonomy extends BaseBundleField
 
     protected static $availableWidgets = [Select::class, Checkboxes::class];
 
+    protected static $availableFilterWidgets = [Select::class, Checkboxes::class];
+
     /**
      * Taxonomy relation
      * 
@@ -93,22 +95,17 @@ class FieldTaxonomy extends BaseBundleField
     /**
      * @inheritDoc
      */
-    public function toSingleFormField($value): Field
+    public function formFieldOptions(): array
     {
-        $field = (new Select(
-            $this->machineName(),
-            [
-                'showLabel' => false,
-                'model' => TaxonomyItem::class,
-                'items' => $this->taxonomy->items->pluck('name', 'id')->all(),
-                'textField' => 'name',
-                'allowNoValue' => !$this->required,
-                'multiple' => $this->multiple,
-                'valueField' => 'id',
-                'default' => $value
-            ]
-        ))->setHtmlName($this->machineName().'[][]');
-        return $field;
+        return [
+            'model' => TaxonomyItem::class,
+            'items' => $this->taxonomy->items->pluck('name', 'id')->all(),
+            'textField' => 'name',
+            'allowNoValue' => !$this->required,
+            'multiple' => $this->multiple,
+            'valueField' => 'id',
+            'htmlName' => $this->machineName().'[][]'
+        ];
     }
 
     /**
