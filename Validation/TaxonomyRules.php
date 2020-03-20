@@ -27,14 +27,12 @@ class TaxonomyRules
         if (!$taxonomy) {
             return false;
         }
-        foreach ($value as $itemId) {
-            $item = TaxonomyItem::find($itemId);
-            if (is_null($item)) {
-                return false;
-            }
-            if ($item->taxonomy->id != $taxonomy->id) {
-                return false;
-            }
+        $item = TaxonomyItem::find($value);
+        if (is_null($item)) {
+            return false;
+        }
+        if ($item->taxonomy->id != $taxonomy->id) {
+            return false;
         }
         return true;
     }

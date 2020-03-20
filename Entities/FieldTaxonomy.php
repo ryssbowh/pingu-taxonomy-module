@@ -2,6 +2,8 @@
 
 namespace Pingu\Taxonomy\Entities;
 
+use Illuminate\Database\Eloquent\Builder;
+use Pingu\Entity\Entities\Entity;
 use Pingu\Field\Entities\BaseBundleField;
 use Pingu\Forms\Support\Field;
 use Pingu\Forms\Support\Fields\Checkboxes;
@@ -11,11 +13,10 @@ use Pingu\Taxonomy\Entities\TaxonomyItem;
 
 class FieldTaxonomy extends BaseBundleField
 {
-    protected $fillable = ['taxonomy', 'required', 'multiple'];
+    protected $fillable = ['taxonomy', 'required'];
 
     protected $casts = [
-        'required' => 'boolean',
-        'multiple' => 'boolean'
+        'required' => 'boolean'
     ];
 
     protected static $availableWidgets = [Select::class, Checkboxes::class];
@@ -45,11 +46,10 @@ class FieldTaxonomy extends BaseBundleField
      */
     public function castSingleValueToDb($value)
     {
-        return json_encode(array_map(
-            function ($value) {
-                return $value->getKey();
-            }, $value), true
-        );
+        if (is_null($value)) {
+            return null;
+        }
+        return $value->getKey();
     }
 
     /**
@@ -57,11 +57,7 @@ class FieldTaxonomy extends BaseBundleField
      */
     public function castToSingleFormValue($value)
     {
-        return array_map(
-            function ($value) {
-                return $value->getKey();
-            }, $value
-        );
+        return $value ? $value->getKey() : '';
     }
 
     /**
@@ -69,7 +65,7 @@ class FieldTaxonomy extends BaseBundleField
      */
     public function castSingleValueFromDb($value)
     {
-        return $value ? json_decode($value) : [];
+        return $value ? (int)$value : null;
     }
 
     /**
@@ -77,11 +73,7 @@ class FieldTaxonomy extends BaseBundleField
      */
     public function castSingleValue($value)
     {
-        return array_map(
-            function ($value) {
-                return TaxonomyItem::find($value);
-            }, $value ?? []
-        );
+        return $value ? TaxonomyItem::find($value) : null;
     }
 
     /**
@@ -95,16 +87,15 @@ class FieldTaxonomy extends BaseBundleField
     /**
      * @inheritDoc
      */
-    public function formFieldOptions(): array
+    public function formFieldOptions(int $index = 0): array
     {
+        $items = $this->taxonomy->getItems()->pluck('name', 'id')->all();
+        $items = ['' => $this->taxonomy->name] + $items;
         return [
-            'model' => TaxonomyItem::class,
-            'items' => $this->taxonomy->items->pluck('name', 'id')->all(),
-            'textField' => 'name',
-            'allowNoValue' => !$this->required,
-            'multiple' => $this->multiple,
-            'valueField' => 'id',
-            'htmlName' => $this->machineName().'[][]'
+            'items' => $items,
+            'required' => $this->required,
+            'multiple' => false,
+            'data-placeholder' => 'Select '.$this->taxonomy->name
         ];
     }
 
@@ -113,14 +104,14 @@ class FieldTaxonomy extends BaseBundleField
      */
     public function defaultValidationRule(): string
     {
-        return 'bail|' . ($this->required ? 'required|' : '') . 'exists:taxonomy_items,id|taxonomy_vocabulary:'.$this->taxonomy_id;
+        return 'exists:taxonomy_items,id|taxonomy_vocabulary:'.$this->taxonomy_id;
     }
 
     /**
      * @inheritDoc
      */
-    public function fixedCardinality()
+    public function singleFilterQueryModifier(Builder $query, $value, Entity $entity)
     {
-        return 1;
+        $query->where('value', '=', $value);
     }
 }

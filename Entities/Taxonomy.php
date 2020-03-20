@@ -2,6 +2,7 @@
 
 namespace Pingu\Taxonomy\Entities;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Pingu\Core\Contracts\Models\HasItemsContract;
 use Pingu\Core\Support\Actions;
@@ -24,6 +25,8 @@ class Taxonomy extends Entity implements HasItemsContract
     ];
 
     public $adminListFields = ['name', 'description'];
+
+    protected $itemsInstance;
 
     /**
      * @inheritDoc
@@ -60,16 +63,28 @@ class Taxonomy extends Entity implements HasItemsContract
     }
 
     /**
+     * Items getter
+     * 
+     * @return Collection
+     */
+    public function getItems(): Collection
+    {
+        if (is_null($this->itemsInstance)) {
+            $this->itemsInstance = $this->items;
+        }
+        return $this->itemsInstance;
+    }
+
+    /**
      * Get the direct children of this taxonomy
      * 
      * @return Collection
      */
-    public function getRootItems()
+    public function getRootItems($orderBy = 'weight')
     {
-        return $this->items()
+        return $this->getItems()
             ->where('parent_id', null)
-            ->orderBy('weight', 'ASC')
-            ->get();
+            ->sortBy($orderBy);
     }
 
     /**
@@ -79,6 +94,6 @@ class Taxonomy extends Entity implements HasItemsContract
      */
     public function getRootNextWeight()
     {
-        return $this->items->isEmpty() ? 0 : $this->items->last()->weight + 1;
+        return $this->getRootItems()->isEmpty() ? 0 : $this->getRootItems()->last()->weight + 1;
     }
 }
