@@ -3,6 +3,8 @@
 namespace Pingu\Taxonomy\Entities\Policies;
 
 use Pingu\Core\Support\Policy;
+use Pingu\Entity\Contracts\BundleContract;
+use Pingu\Entity\Entities\Entity;
 use Pingu\Taxonomy\Entities\TaxonomyItem;
 use Pingu\User\Entities\User;
 
@@ -37,7 +39,7 @@ class TaxonomyItemPolicy extends Policy
         return $user->hasPermissionTo('delete taxonomy terms');
     }
 
-    public function create(?User $user)
+    public function create(?User $user, ?BundleContract $bundle = null)
     {
         $user = $this->userOrGuest($user);
         return $user->hasPermissionTo('edit taxonomy terms');

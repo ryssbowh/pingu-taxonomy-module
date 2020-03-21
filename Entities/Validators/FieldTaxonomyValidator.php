@@ -9,7 +9,7 @@ class FieldTaxonomyValidator extends BaseFieldsValidator
     /**
      * @inheritDoc
      */
-    protected function rules(): array
+    protected function rules(bool $updating): array
     {
         return [
             'taxonomy' => 'required|exists:taxonomies,id',

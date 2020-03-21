@@ -9,7 +9,7 @@ class TaxonomyItemValidator extends BaseFieldsValidator
     /**
      * @inheritDoc
      */
-    protected function rules(): array
+    protected function rules(bool $updating): array
     {
         return [
             'name' => 'required',

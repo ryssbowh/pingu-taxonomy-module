@@ -2,6 +2,8 @@
 
 namespace Pingu\Taxonomy\Entities\Policies;
 
+use Pingu\Entity\Contracts\BundleContract;
+use Pingu\Entity\Entities\Entity;
 use Pingu\Entity\Support\BaseEntityPolicy;
 use Pingu\Taxonomy\Entities\Taxonomy;
 use Pingu\User\Entities\User;
@@ -37,7 +39,7 @@ class TaxonomyPolicy extends BaseEntityPolicy
         return $user->hasPermissionTo('delete taxonomies vocabularies');
     }
 
-    public function create(?User $user)
+    public function create(?User $user, ?BundleContract $bundle = null)
     {
         $user = $this->userOrGuest($user);
         return $user->hasPermissionTo('edit taxonomies vocabularies');
