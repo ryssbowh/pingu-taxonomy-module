@@ -26,6 +26,8 @@ class Taxonomy extends Entity implements HasItemsContract
 
     public $adminListFields = ['name', 'description'];
 
+    public $descriptiveField = 'name';
+
     protected $itemsInstance;
 
     /**
