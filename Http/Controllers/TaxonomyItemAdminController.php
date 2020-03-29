@@ -4,7 +4,7 @@ namespace Pingu\Taxonomy\Http\Controllers;
 
 use Illuminate\Support\Collection;
 use Pingu\Entity\Contracts\BundleContract;
-use Pingu\Entity\Entities\Entity;
+use Pingu\Entity\Support\Entity;
 use Pingu\Entity\Http\Controllers\AdminEntityController;
 use Pingu\Forms\Support\Form;
 use Pingu\Taxonomy\Entities\Taxonomy;

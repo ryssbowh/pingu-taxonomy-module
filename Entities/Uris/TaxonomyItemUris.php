@@ -2,7 +2,7 @@
 
 namespace Pingu\Taxonomy\Entities\Uris;
 
-use Pingu\Entity\Support\BaseEntityUris;
+use Pingu\Entity\Support\Uris\BaseEntityUris;
 use Pingu\Taxonomy\Entities\Taxonomy;
 
 class TaxonomyItemUris extends BaseEntityUris

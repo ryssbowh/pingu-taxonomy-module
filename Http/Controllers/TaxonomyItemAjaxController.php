@@ -3,7 +3,7 @@
 namespace Pingu\Taxonomy\Http\Controllers;
 
 use Pingu\Entity\Contracts\BundleContract;
-use Pingu\Entity\Entities\Entity;
+use Pingu\Entity\Support\Entity;
 use Pingu\Entity\Http\Controllers\AjaxEntityController;
 use Pingu\Forms\Support\Form;
 use Pingu\Taxonomy\Entities\Taxonomy;

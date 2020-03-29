@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Pingu\Core\Contracts\Models\HasItemsContract;
 use Pingu\Core\Support\Actions;
 use Pingu\Core\Traits\Models\HasMachineName;
-use Pingu\Entity\Entities\Entity;
+use Pingu\Entity\Support\Entity;
 use Pingu\Taxonomy\Entities\Actions\TaxonomyActions;
 use Pingu\Taxonomy\Entities\Policies\TaxonomyPolicy;
 use Pingu\Taxonomy\Entities\TaxonomyItem;

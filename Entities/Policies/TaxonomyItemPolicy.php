@@ -4,17 +4,12 @@ namespace Pingu\Taxonomy\Entities\Policies;
 
 use Pingu\Core\Support\Policy;
 use Pingu\Entity\Contracts\BundleContract;
-use Pingu\Entity\Entities\Entity;
+use Pingu\Entity\Support\Entity;
 use Pingu\Taxonomy\Entities\TaxonomyItem;
 use Pingu\User\Entities\User;
 
 class TaxonomyItemPolicy extends Policy
 {
-    protected function userOrGuest(?User $user)
-    {
-        return $user ? $user : \Permissions::guestRole();
-    }
-
     public function index(?User $user)
     {
         $user = $this->userOrGuest($user);

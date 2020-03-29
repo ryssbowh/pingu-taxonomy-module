@@ -8,7 +8,7 @@ use Pingu\Core\Traits\Models\HasChildren;
 use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Entity\Contracts\Routes;
 use Pingu\Entity\Contracts\Uris;
-use Pingu\Entity\Entities\Entity;
+use Pingu\Entity\Support\Entity;
 use Pingu\Taxonomy\Entities\Policies\TaxonomyItemPolicy;
 use Pingu\Taxonomy\Entities\Taxonomy;
 use Pingu\Taxonomy\Entities\Uris\TaxonomyItemUris;
