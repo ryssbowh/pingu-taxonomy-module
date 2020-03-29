@@ -37,7 +37,7 @@ class S2019_08_06_175322010902_Install extends MigratableSeeder
             [
             'name' => 'Taxonomy',
             'deletable' => 0,
-            'url' => 'taxonomy.admin.taxonomy',
+            'url' => 'taxonomy.admin.index',
             'permission_id' => $perm->id,
             'active' => 1
             ], $menu, $structure
