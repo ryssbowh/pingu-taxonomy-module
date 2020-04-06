@@ -27,8 +27,6 @@ class TaxonomyItemAjaxController extends AjaxEntityController
         $taxonomy = $this->routeParameter('taxonomy');
         $form->getElement('taxonomy')->setValue($taxonomy->id);
         $form->removeElements(['parent', 'weight'])
-            ->isAjax()
-            ->addViewSuggestion('forms.modal')
             ->option('title', 'Add a '.$entity::friendlyName());
     }
 
@@ -38,8 +36,6 @@ class TaxonomyItemAjaxController extends AjaxEntityController
     protected function afterEditFormCreated(Form $form, Entity $entity)
     {
         $form->removeElements(['parent', 'weight']);
-        $form->isAjax()
-            ->addViewSuggestion('forms.modal')
-            ->option('title', 'Add a '.$entity::friendlyName());
+        $form->option('title', 'Add a '.$entity::friendlyName());
     }
 }

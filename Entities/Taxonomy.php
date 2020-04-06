@@ -4,7 +4,7 @@ namespace Pingu\Taxonomy\Entities;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Pingu\Core\Contracts\Models\HasItemsContract;
+use Pingu\Core\Contracts\HasItemsContract;
 use Pingu\Core\Support\Actions;
 use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Entity\Support\Entity;

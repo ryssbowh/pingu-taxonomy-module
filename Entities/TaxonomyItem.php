@@ -3,7 +3,7 @@
 namespace Pingu\Taxonomy\Entities;
 
 use Illuminate\Support\Str;
-use Pingu\Core\Contracts\Models\HasChildrenContract;
+use Pingu\Core\Contracts\HasChildrenContract;
 use Pingu\Core\Traits\Models\HasChildren;
 use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Entity\Contracts\Routes;

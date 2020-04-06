@@ -24,7 +24,8 @@ class TaxonomyFields extends BaseFieldRepository
                 'machineName',
                 [
                     'label' => 'Machine name',
-                    'required' => true
+                    'required' => true,
+                    'dashifyFrom' => 'name'
                 ]
             ),
             new LongText('description')
