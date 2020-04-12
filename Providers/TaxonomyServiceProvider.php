@@ -23,6 +23,7 @@ class TaxonomyServiceProvider extends ModuleServiceProvider
      */
     public function boot()
     {
+        $this->registerEntities($this->entities);
         $this->registerTranslations();
         $this->registerConfig();
         $this->loadModuleViewsFrom(__DIR__ . '/../Resources/views', 'taxonomy');
@@ -55,7 +56,6 @@ class TaxonomyServiceProvider extends ModuleServiceProvider
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
         $this->app->register(AuthServiceProvider::class);
-        $this->registerEntities($this->entities);
     }
 
     protected function extendsValidator()
