@@ -19,6 +19,7 @@ class M2019_08_09_180346486495_InstallTaxonomy extends Migration
                 $table->string('machineName')->unique();
                 $table->string('name');
                 $table->text('description');
+                $table->boolean('deletable')->default(true);
                 $table->timestamps();
             }
         );
