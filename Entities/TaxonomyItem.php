@@ -9,9 +9,10 @@ use Pingu\Core\Traits\Models\HasMachineName;
 use Pingu\Entity\Contracts\Routes;
 use Pingu\Entity\Contracts\Uris;
 use Pingu\Entity\Support\Entity;
-use Pingu\Taxonomy\Entities\Policies\TaxonomyItemPolicy;
 use Pingu\Taxonomy\Entities\Taxonomy;
 use Pingu\Taxonomy\Entities\Uris\TaxonomyItemUris;
+use Pingu\Taxonomy\Http\Contexts\CreateTaxonomyItemContext;
+use Pingu\Taxonomy\Http\Contexts\EditTaxonomyItemContext;
 use Pingu\Taxonomy\Routes\Entities\TaxonomyItemRoutes;
 
 class TaxonomyItem extends Entity implements HasChildrenContract
@@ -26,7 +27,9 @@ class TaxonomyItem extends Entity implements HasChildrenContract
         'description' => ''
     ];
 
-    protected static function boot()
+    public static $routeContexts = [EditTaxonomyItemContext::class, CreateTaxonomyItemContext::class];
+
+    public static function boot()
     {
         parent::boot();
 
@@ -35,14 +38,6 @@ class TaxonomyItem extends Entity implements HasChildrenContract
                 $item->generateMachineName();
             }
         );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getPolicy(): string
-    {
-        return TaxonomyItemPolicy::class;
     }
 
     /**

@@ -30,4 +30,25 @@ class FieldTaxonomyFields extends BundleFieldFieldRepository
             ),
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function rules(bool $updating): array
+    {
+        return [
+            'taxonomy' => 'required|exists:taxonomies,id',
+            'name' => 'required|string',
+            'required' => 'sometimes',
+            'multiple' => 'sometimes'
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function messages(): array
+    {
+        return [];
+    }
 }

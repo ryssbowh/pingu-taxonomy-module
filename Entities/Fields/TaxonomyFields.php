@@ -31,4 +31,29 @@ class TaxonomyFields extends BaseFieldRepository
             new LongText('description')
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function rules(): array
+    {
+        return [
+            'name' => 'required',
+            'machineName' => 'required|unique:taxonomies,machineName',
+            'description' => 'string'
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function messages(): array
+    {
+        return [
+            'name.required' => 'Name is required',
+            'taxonomy.required' => 'Taxonomy is required',
+            'parent.exists' => 'Parent must be a taxonomy item',
+            'taxonomy.exists' => 'Taxonomy must be a taxonomy',
+        ];
+    }
 }

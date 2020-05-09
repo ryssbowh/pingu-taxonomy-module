@@ -39,4 +39,30 @@ class TaxonomyItemFields extends BaseFieldRepository
             )
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function rules(): array
+    {
+        return [
+            'name' => 'required',
+            'taxonomy' => 'required|exists:taxonomies,id',
+            'parent' => 'nullable|exists:taxonomy_items,id',
+            'weight' => 'nullable|integer',
+            'description' => 'nullable|string'
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function messages(): array
+    {
+        return [
+            'name.required' => 'Name is required',
+            'machineName.required' => 'Machine Name is required',
+            'machineName.unique' => 'Machine name already exists'
+        ];
+    }
 }

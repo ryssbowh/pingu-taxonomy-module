@@ -29,7 +29,7 @@ class M2019_08_09_180346486495_InstallTaxonomy extends Migration
                 $table->increments('id');
                 $table->string('name');
                 $table->string('machineName')->unique();
-                $table->text('description');
+                $table->text('description')->nullable();
                 $table->integer('taxonomy_id')->unsigned();
                 $table->foreign('taxonomy_id')->references('id')->on('taxonomies')->onDelete('cascade');;
                 $table->integer('parent_id')->unsigned()->nullable();

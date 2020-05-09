@@ -2,15 +2,15 @@
 
 namespace Pingu\Taxonomy\Entities\Uris;
 
-use Pingu\Entity\Support\Uris\BaseEntityUris;
+use Pingu\Core\Support\Uris\BaseModelUris;
 use Pingu\Taxonomy\Entities\Taxonomy;
 
-class TaxonomyUris extends BaseEntityUris
+class TaxonomyUris extends BaseModelUris
 {
     protected function uris(): array
     {
         return [
-            'editItems' => Taxonomy::routeSlug().'/{'.Taxonomy::routeSlug().'}/items'
+            'editItems' => '@slug@/{@slug@}/items'
         ];
     }
 }

@@ -2,10 +2,10 @@
 
 namespace Pingu\Taxonomy\Entities\Uris;
 
-use Pingu\Entity\Support\Uris\BaseEntityUris;
+use Pingu\Core\Support\Uris\BaseModelUris;
 use Pingu\Taxonomy\Entities\Taxonomy;
 
-class TaxonomyItemUris extends BaseEntityUris
+class TaxonomyItemUris extends BaseModelUris
 {
    
     protected function uris(): array
